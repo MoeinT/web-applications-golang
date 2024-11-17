@@ -1,2 +1,2 @@
 # web-applications-golang
-Documenting my learning on Building Web Applications with Golang
+Here we'll document what we learn on Building Web Applications with Golang.
