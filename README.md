@@ -3,7 +3,7 @@ This documentation serves as a beginner-friendly guide to creating a basic web s
 
 ## Hello-world application
 ### HTTP Handler Function
-The handler function processes incoming HTTP requests and sends responses back to the client. Handler functions define what should happen when a user visits a specific URL path. For example, they might return a greeting or dynamically generated content based on the request. Here are some of the important concepts:
+The handler function processes incoming HTTP requests and sends responses back to the client. Handler functions define what should happen when a user visits a specific URL path. For example, they might return a greeting or dynamically generated content based on the request. An important thing to rememeber is that in order for a function to respond to a request from a web browser, it needs the have the first two parameters below:
 1. **http.ResponseWriter:**
     - An interface used to write the HTTP response back to the client.
     - You use methods like Write or Fprintln to send text, HTML, or JSON content as the response.
@@ -29,3 +29,14 @@ The handler function processes incoming HTTP requests and sends responses back t
 - Start the Server: Use http.ListenAndServe to begin listening for requests.
 - Access the Server: Use a browser or HTTP client to send requests to the server's URL.
 - Process Requests: The handler receives the client's request and responds accordingly.
+
+### Templates
+Templates in Go are a way to generate HTML dynamically on the server. The html/template package allows developers to define static HTML with placeholders that can be replaced by dynamic data during runtime. This approach separates the application logic from the presentation layer, making the codebase more maintainable and flexible.
+
+In Go, we can create an HTML file (e.g., home.html) with placeholders for dynamic content. Placeholders are written using ```{{ .FieldName }}```. Here are a few important methods to create a hello-world application using a dynamic template:
+1. **template.ParseFiles**
+    - Use this function to load the template file in your Go code. It returns a template object and an error object
+2. **tmpl.Execute**: 
+    - Use this function to execute your template object and return the result back to the client, so it needs object of type `http.ResponseWriter` as an input.
+3. **Passing data**
+    - The most common and recommended approach is to pass a struct object to the `Execute` function. Specific fields of this struct can be accessed inside the template using the dot notation.
