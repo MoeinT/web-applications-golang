@@ -6,15 +6,34 @@ import (
     "html/template"
 )
 
-// RenderTemplate renders the specified template with the provided data
-func RenderTemplate(w http.ResponseWriter, templateFile string, data interface{}) {
-	tmpl, err := template.ParseFiles(templateFile)
-	if err != nil {
-		fmt.Println("Error parsing the HTML file:", err)
-		return
+var cachedTmpl = make(map[string]*template.Template)
+
+func RenderTemplate(w http.ResponseWriter, data interface{}, templateFile string) {
+	
+	_, inMap := cachedTmpl[templateFile]
+
+	if !inMap {
+		CreateTemplateCache(templateFile)
 	}
 
-	if err := tmpl.Execute(w, data); err != nil {
+	if err := cachedTmpl[templateFile].Execute(w, data); err != nil {
 		fmt.Println("Error executing template:", err)
 	}
+}
+
+func CreateTemplateCache(templateFile string) error {
+	templates := []string{
+		templateFile,
+		"templates/base.layout.html",
+	}
+
+	tmplParsed, errorParsed := template.ParseFiles(templates...)
+	if errorParsed != nil {
+		return errorParsed
+	}
+
+	cachedTmpl[templateFile] = tmplParsed
+	fmt.Println("Template added to cache:", templateFile)
+
+	return nil
 }
