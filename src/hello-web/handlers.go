@@ -23,7 +23,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
         Message: message,
     }
 
-    RenderTemplate(w, "templates/home.page.html", data)
+    RenderTemplate(w, data, "templates/home.page.html")
 }
 
 func About(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +44,7 @@ func About(w http.ResponseWriter, r *http.Request) {
         Message: message,
     }
 
-    RenderTemplate(w, "templates/about.page.html", data)
+    RenderTemplate(w, data, "templates/about.page.html")
 
 }
 

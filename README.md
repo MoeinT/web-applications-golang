@@ -40,3 +40,10 @@ In Go, we can create an HTML file (e.g., home.html) with placeholders for dynami
     - Use this function to execute your template object and return the result back to the client, so it needs object of type `http.ResponseWriter` as an input.
 3. **Passing data**
     - The most common and recommended approach is to pass a struct object to the `Execute` function. Specific fields of this struct can be accessed inside the template using the dot notation.
+
+### Template Caching Methodology
+We create a template cache as a `map[string]*template.Template` where:
+- Each key is the file name of the page template (e.g., home.page.html).
+- Each value is a parsed `*template.Template` that combines the page template with any layout templates.
+- This approach avoids reparsing templates repeatedly during runtime, improving performance and maintaining separation of concerns between page content and layout structure.
+- A key point in this implementation is that we can use the `ParseFiles` method as part of the template package to parse one or multiple html files, but we can also use it an a method of `*template.Template` to append a parsed file to a partially parsed file. We used this concept to parse pages first, and then appending layouts, if any, to them.
