@@ -1,11 +1,13 @@
-package main
+package handlers
 
 import (
     "fmt"
     "net/http"
+    "hello-web/pkg/renders"
+    "html/template"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
+func Home(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
     name := r.URL.Query().Get("name")
     
     var message string
@@ -23,10 +25,10 @@ func Home(w http.ResponseWriter, r *http.Request) {
         Message: message,
     }
 
-    RenderTemplate(w, data, "templates/home.page.html")
+    renders.RenderTemplate(w, data, tmpl)
 }
 
-func About(w http.ResponseWriter, r *http.Request) {
+func About(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
     name := r.URL.Query().Get("name")
     
     var message string
@@ -44,7 +46,7 @@ func About(w http.ResponseWriter, r *http.Request) {
         Message: message,
     }
 
-    RenderTemplate(w, data, "templates/about.page.html")
+    renders.RenderTemplate(w, data, tmpl)
 
 }
 

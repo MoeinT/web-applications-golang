@@ -1,4 +1,4 @@
-package main
+package renders
 
 import (
     "fmt"
@@ -6,27 +6,22 @@ import (
     "html/template"
 	"path/filepath"
 	"log"
+	"bytes"
 )
 
 
-func RenderTemplate(w http.ResponseWriter, data interface{}, templateFile string) {
-	
-	// Get the cached templates
-	cachedTmpl, err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal(err)
+func RenderTemplate(w http.ResponseWriter, data interface{}, parsedTemplates *template.Template) {
+
+	buff := new(bytes.Buffer)
+
+	err_buff := parsedTemplates.Execute(buff, data)
+	if err_buff != nil {
+		log.Fatal(err_buff)
 	}
 
-	// Get the cached template
-	parsedTemplates, InMap:= cachedTmpl[templateFile]
-	if !InMap {
-		log.Fatal("cached template not found")
-	}
-
-	// Execute the cached template
-	err_exec := parsedTemplates.Execute(w, data)
-	if err_exec != nil {
-		log.Fatal(err_exec)
+	_, err_write_buff := buff.WriteTo(w)
+	if err_write_buff != nil {
+		log.Fatal(err_write_buff)
 	}
 }
 
