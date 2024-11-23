@@ -1,32 +1,42 @@
-package main
+package renders
 
 import (
     "fmt"
     "net/http"
     "html/template"
 	"path/filepath"
+	"hello-web/pkg/configs"
 	"log"
+	"bytes"
 )
 
+var app configs.AppConfig
 
-func RenderTemplate(w http.ResponseWriter, data interface{}, templateFile string) {
+func NewTemplateCache(a configs.AppConfig) {
+	app = a
+}
+
+// Define a Handler struct to hold appConfig
+func RenderTemplate(w http.ResponseWriter, data interface{}, tmpl string) {
+
+	var parsedTmpl map[string]*template.Template
 	
-	// Get the cached templates
-	cachedTmpl, err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal(err)
+	if app.UseCache {
+		parsedTmpl = app.TemplateCache
+	} else {
+		parsedTmpl, _ = CreateTemplateCache()
 	}
 
-	// Get the cached template
-	parsedTemplates, InMap:= cachedTmpl[templateFile]
-	if !InMap {
-		log.Fatal("cached template not found")
+	buff := new(bytes.Buffer)
+
+	err_buff := parsedTmpl[tmpl].Execute(buff, data)
+	if err_buff != nil {
+		log.Fatal(err_buff)
 	}
 
-	// Execute the cached template
-	err_exec := parsedTemplates.Execute(w, data)
-	if err_exec != nil {
-		log.Fatal(err_exec)
+	_, err_write_buff := buff.WriteTo(w)
+	if err_write_buff != nil {
+		log.Fatal(err_write_buff)
 	}
 }
 

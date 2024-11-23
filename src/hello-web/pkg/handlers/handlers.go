@@ -1,11 +1,19 @@
-package main
+package handlers
 
 import (
     "fmt"
     "net/http"
+    "hello-web/pkg/renders"
+    "hello-web/pkg/configs"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
+// Define a Handler struct to hold appConfig
+type App struct {
+    AppConfig *configs.AppConfig
+}
+
+
+func (h *App) Home(w http.ResponseWriter, r *http.Request) {
     name := r.URL.Query().Get("name")
     
     var message string
@@ -23,10 +31,10 @@ func Home(w http.ResponseWriter, r *http.Request) {
         Message: message,
     }
 
-    RenderTemplate(w, data, "templates/home.page.html")
+    renders.RenderTemplate(w, data, "templates/home.page.html")
 }
 
-func About(w http.ResponseWriter, r *http.Request) {
+func (h *App) About(w http.ResponseWriter, r *http.Request) {
     name := r.URL.Query().Get("name")
     
     var message string
@@ -44,7 +52,7 @@ func About(w http.ResponseWriter, r *http.Request) {
         Message: message,
     }
 
-    RenderTemplate(w, data, "templates/about.page.html")
+    renders.RenderTemplate(w, data, "templates/about.page.html")
 
 }
 
