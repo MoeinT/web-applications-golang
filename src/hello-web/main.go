@@ -11,7 +11,6 @@ import (
 
 var portNumber = ":8080"
 
-
 func main() {
 
     var appConfigs configs.AppConfig
@@ -23,16 +22,17 @@ func main() {
             log.Fatal("Cannot create a cache for templates", err)
         }
         appConfigs.TemplateCache = tc
+        appConfigs.UseCache = false
     }
 
-    // Define handlers with tc
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        handlers.Home(w, r, appConfigs.TemplateCache["templates/home.page.html"])
-    })
+    // Pass the application configs to the renders package
+    renders.NewTemplateCache(appConfigs)
+    // Pass the application configs to the handlers package
+    handler := &handlers.App{AppConfig: &appConfigs}
 
-    http.HandleFunc("/about/", func(w http.ResponseWriter, r *http.Request) {
-        handlers.About(w, r, appConfigs.TemplateCache["templates/about.page.html"])
-    })
+    // Call the Home and About handlers from the handlers package
+    http.HandleFunc("/", handler.Home)
+    http.HandleFunc("/about/", handler.About)
 
     // Start the server and listen on port 8080
     fmt.Println(fmt.Sprintf("Starting server on port %s...", portNumber))

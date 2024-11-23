@@ -5,16 +5,31 @@ import (
     "net/http"
     "html/template"
 	"path/filepath"
+	"hello-web/pkg/configs"
 	"log"
 	"bytes"
 )
 
+var app configs.AppConfig
 
-func RenderTemplate(w http.ResponseWriter, data interface{}, parsedTemplates *template.Template) {
+func NewTemplateCache(a configs.AppConfig) {
+	app = a
+}
+
+// Define a Handler struct to hold appConfig
+func RenderTemplate(w http.ResponseWriter, data interface{}, tmpl string) {
+
+	var parsedTmpl map[string]*template.Template
+	
+	if app.UseCache {
+		parsedTmpl = app.TemplateCache
+	} else {
+		parsedTmpl, _ = CreateTemplateCache()
+	}
 
 	buff := new(bytes.Buffer)
 
-	err_buff := parsedTemplates.Execute(buff, data)
+	err_buff := parsedTmpl[tmpl].Execute(buff, data)
 	if err_buff != nil {
 		log.Fatal(err_buff)
 	}
