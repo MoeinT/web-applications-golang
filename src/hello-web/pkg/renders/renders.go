@@ -10,10 +10,14 @@ import (
 	"bytes"
 )
 
-var app configs.AppConfig
+var App *RenderApp
 
-func NewTemplateCache(a configs.AppConfig) {
-	app = a
+type RenderApp struct { 
+	AppConfig *configs.AppConfig
+}
+
+func NewTemplateCache(appConfig *configs.AppConfig) {
+	App = &RenderApp{AppConfig: appConfig}
 }
 
 // Define a Handler struct to hold appConfig
@@ -21,8 +25,8 @@ func RenderTemplate(w http.ResponseWriter, data interface{}, tmpl string) {
 
 	var parsedTmpl map[string]*template.Template
 	
-	if app.UseCache {
-		parsedTmpl = app.TemplateCache
+	if App.AppConfig.UseCache {
+		parsedTmpl = App.AppConfig.TemplateCache
 	} else {
 		parsedTmpl, _ = CreateTemplateCache()
 	}

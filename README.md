@@ -47,3 +47,10 @@ We create a template cache as a `map[string]*template.Template` where:
 - Each value is a parsed `*template.Template` that combines the page template with any layout templates.
 - This approach avoids reparsing templates repeatedly during runtime, improving performance and maintaining separation of concerns between page content and layout structure.
 - A key point in this implementation is that we can use the `ParseFiles` method as part of the template package to parse one or multiple html files, but we can also use it an a method of `*template.Template` to append a parsed file to a partially parsed file. We used this concept to parse pages first, and then appending layouts, if any, to them.
+
+### Sharing data between different parts of the application
+In Go, two common approaches to sharing data across different parts of an application are global state with update functions and function receivers on structs. 
+
+- A receiver is a special parameter in Go methods that associates the method with a specific type, often a struct, allowing the struct to hold shared data and dependencies. 
+- The global state approach involves defining a variable that matches the desired type and providing functions to update or access it, which is simple but risks issues like global state conflicts and poor concurrency safety. 
+- In contrast, using function receivers ties methods to a struct that encapsulates the shared data, promoting modularity, testability, and scalability. Function receivers are idiomatic in Go, as they allow for explicit dependencies and better code organization, especially in medium to large applications. Both approaches have use cases, but the choice depends on application complexity and long-term maintainability requirements.

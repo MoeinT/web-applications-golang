@@ -26,7 +26,7 @@ func main() {
     }
 
     // Pass the application configs to the renders package
-    renders.NewTemplateCache(appConfigs)
+    renders.NewTemplateCache(&appConfigs)
     // Pass the application configs to the handlers package
     handler := &handlers.App{AppConfig: &appConfigs}
 

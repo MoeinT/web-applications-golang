@@ -19,9 +19,9 @@ func (h *App) Home(w http.ResponseWriter, r *http.Request) {
     var message string
     
     if name != "" {
-        message = fmt.Sprintf("Hello, %s!", name)
+        message = fmt.Sprintf("Hello, %s, this is the home page", name)
     } else {
-        message = "Hello, World!"
+        message = "Hello, world, this is the home page!"
     }
 
     // Define the data to pass to the template
